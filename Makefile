@@ -21,7 +21,7 @@ DEBUG = -g
 CC_FLAGS = $(DEBUG) $(ALL_WARNINGS) $(CPP_11) -isystem$(BOOST_INC_DIR)
 
 # -----------------------------------------------------------------------------
-# make all: compiles the program. 
+# make all: compiles the program.
 # make exe: compiles the program and runs exe.
 #
 # Note: when a dependency is listed for a .o file, the file is rebuilt when it
