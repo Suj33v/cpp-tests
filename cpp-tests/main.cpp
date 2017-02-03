@@ -22,7 +22,7 @@ TEST_CASE("bind test", "[misc]") {
 }
 
 TEST_CASE("bool compare test", "[misc]") {
-  REQUIRE(true > false);
+  REQUIRE((true > false));
 }
 
 TEST_CASE("bool to int implicit conversion test", "[misc]") {
