@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include <boost/icl/interval.hpp>
 #include <boost/icl/interval_set.hpp>
+#include <boost/icl/map.hpp> // required only for boost::icl::partial_enricher.
 #include <boost/icl/separate_interval_set.hpp>
 #include <boost/icl/split_interval_set.hpp>
 #include <boost/icl/interval_map.hpp>
@@ -127,7 +128,45 @@ TEST_CASE("interval map tests", "[boost]") {
         REQUIRE( (keys == std::vector<DiscreteInterval>(
             { DiscreteInterval::right_open(6, 7)
             , DiscreteInterval::closed(7, 8)
-            , DiscreteInterval::left_open(8, 9)})) );
+            , DiscreteInterval::left_open(8, 9)
+            })) );
+    }
+
+    SECTION("enriched interval maps") {
+        typedef boost::icl::interval_map<int, int, boost::icl::partial_enricher> EIMap;
+
+        // The third template above is a trait of the interval map. There are 4 possible traits:
+        // - partial_absorber
+        // - partial_enricher
+        // - total absorber
+        // - total enricher
+        // "partial" means that the map is defined only for keys that have been inserted.
+        // "total" means that the map is considered to have a "neutral" value for all keys not
+        // stored in the map.
+        // "absorber" means that the identity element with respect to "+" cannot be stored as a
+        // value. For example, 0 for int types and "" for std::string types.
+        // "enricher" allows storing the identity element.
+
+        auto eimap = EIMap{};
+
+        eimap += std::make_pair(Interval::closed(1, 10), 0);
+        eimap += std::make_pair(Interval::closed(3, 5), 1);
+        eimap += std::make_pair(Interval::closed(8, 10), 3);
+
+        std::vector<DiscreteInterval> keys;
+        std::vector<int> vals;
+        for(auto it = eimap.begin(); it != eimap.end(); ++it) {
+            keys.push_back(it->first);
+            vals.push_back(it->second);
+        }
+
+        REQUIRE( (keys == std::vector<DiscreteInterval>(
+            { DiscreteInterval::right_open(1, 3)
+            , DiscreteInterval::closed(3, 5)
+            , DiscreteInterval::open(5, 8)
+            , DiscreteInterval::closed(8, 10)
+            })) );
+        REQUIRE( (vals == std::vector<int>({0, 1, 0, 3})) );
     }
 }
 
