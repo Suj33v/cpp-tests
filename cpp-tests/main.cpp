@@ -1,4 +1,5 @@
-#define CATCH_CONFIG_MAIN
+#define CATCH_CONFIG_MAIN // this define tells catch that the current file is the main test file.
+#define _BSD_SOURCE // this is required by cygwin to call gettimeofday() which is used by catch.
 #include "catch.hpp"
 #include <functional>
 #include <memory>
