@@ -49,6 +49,8 @@ EXEC_NAME = main.out
 
 all: $(OBJS)
 	$(CC) $^ -o $(EXEC_NAME)
+# Without -o, the default name of a.out (a.exe) for cygwin will be used for the exe.
+# We specify an exe name here to keep the clean rule simple.
 
 -include $(OBJS:.o=.d)
 
@@ -57,6 +59,8 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CC) $(CC_FLAGS) -c $< -o $@
 # -o places the output of the gcc operation in the specified file ($@ here).
 # If this flag is not specified, the output will simply be placed at the target name (%.o).
+# $@ refers to the name of the target (everything before the colon in the line $(OBJ_DIR)/%.o).
+# $< refers to the name of the first dependency (first name after the colon).
 
 exe:
 	make all
@@ -64,4 +68,3 @@ exe:
 
 clean:
 	rm -rf $(EXEC_NAME) $(OBJ_DIR)
-	# rm -f $(EXEC_NAME) *.o *.d
