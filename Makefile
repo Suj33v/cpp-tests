@@ -18,7 +18,9 @@ CPP_11 = -std=c++11
 
 DEBUG = -g
 
-CC_FLAGS = $(DEBUG) $(ALL_WARNINGS) $(CPP_11) -isystem$(BOOST_INC_DIR)
+DEP_FLAGS = -MMD -MP
+
+CC_FLAGS = $(DEBUG) $(ALL_WARNINGS) $(CPP_11) -isystem$(BOOST_INC_DIR) $(DEP_FLAGS)
 
 # -----------------------------------------------------------------------------
 # make all: compiles the program.
@@ -34,31 +36,32 @@ CC_FLAGS = $(DEBUG) $(ALL_WARNINGS) $(CPP_11) -isystem$(BOOST_INC_DIR)
 
 SRC_DIR = cpp-tests
 
-OBJS = main.o algos.o boost.o pointers.o strings.o
+OBJ_DIR = obj
+
+OBJS = \
+	$(OBJ_DIR)/main.o \
+	$(OBJ_DIR)/algos.o \
+	$(OBJ_DIR)/boost.o \
+	$(OBJ_DIR)/pointers.o \
+	$(OBJ_DIR)/strings.o
 
 EXEC_NAME = main.out
 
 all: $(OBJS)
-	$(CC) $(OBJS) $(CC_FLAGS) -o $(EXEC_NAME)
+	$(CC) $^ -o $(EXEC_NAME)
 
-main.o: $(SRC_DIR)/main.cpp $(SRC_DIR)/catch.hpp
-	$(CC) $(CC_FLAGS) -c $(SRC_DIR)/main.cpp
+-include $(OBJS:.o=.d)
 
-algos.o: $(SRC_DIR)/algos.cpp $(SRC_DIR)/catch.hpp
-	$(CC) $(CC_FLAGS) -c $(SRC_DIR)/algos.cpp
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(CC_FLAGS) -c $< -o $@
+# -o places the output of the gcc operation in the specified file ($@ here).
+# If this flag is not specified, the output will simply be placed at the target name (%.o).
 
-boost.o: $(SRC_DIR)/boost.cpp $(SRC_DIR)/catch.hpp
-	$(CC) $(CC_FLAGS) -c $(SRC_DIR)/boost.cpp
-
-pointers.o: $(SRC_DIR)/pointers.cpp $(SRC_DIR)/catch.hpp
-	$(CC) $(CC_FLAGS) -c $(SRC_DIR)/pointers.cpp
-
-strings.o: $(SRC_DIR)/strings.cpp $(SRC_DIR)/catch.hpp
-	$(CC) $(CC_FLAGS) -c $(SRC_DIR)/strings.cpp
-
-exe: all
+exe:
 	make all
 	./$(EXEC_NAME)
 
 clean:
-	rm -f $(EXEC_NAME) *.o
+	rm -rf $(EXEC_NAME) $(OBJ_DIR)
+	# rm -f $(EXEC_NAME) *.o *.d
