@@ -1,3 +1,9 @@
+# Project-specific
+bin/*
+build/*
+!*/.gitkeep
+
+
 # Dependency files
 *.d
 
