@@ -1,7 +1,8 @@
 #include "catch.hpp"
 #include <string>
 
-TEST_CASE("sub-string test", "[string]") {
+TEST_CASE("sub-string test", "[string]")
+{
   const std::string fileName = "test.mps";
   auto pos = fileName.find(".");
   auto nameWithoutExt = fileName.substr(0, pos);
@@ -9,7 +10,8 @@ TEST_CASE("sub-string test", "[string]") {
   REQUIRE(nameWithoutExt == "test");
 }
 
-TEST_CASE("partial string comparison test", "[string]") {
+TEST_CASE("partial string comparison test", "[string]")
+{
   std::string fullString = "abcdefg";
   std::string ending = "defg";
 
