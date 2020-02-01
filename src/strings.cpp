@@ -12,9 +12,9 @@ TEST_CASE("sub-string test", "[string]")
 
 TEST_CASE("partial string comparison test", "[string]")
 {
-  std::string fullString = "abcdefg";
-  std::string ending = "defg";
+  std::string all = "abcdefg";
+  std::string end = "defg";
 
-  REQUIRE(fullString.compare(fullString.length() - ending.length(), ending.length(), ending) == 0);
-  REQUIRE(std::equal(ending.rbegin(), ending.rend(), fullString.rbegin()) == true);
+  REQUIRE(all.compare(all.length() - end.length(), end.length(), end) == 0);
+  REQUIRE(std::equal(end.rbegin(), end.rend(), all.rbegin()) == true);
 }

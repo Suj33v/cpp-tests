@@ -83,9 +83,13 @@ TEST_CASE("interval set tests", "[boost]")
 
         se_iset += Interval::right_open(1, 3);
         se_iset += Interval::closed(3, 5);
-        REQUIRE_FALSE((se_iset == SeparateIntervalSet(Interval::closed(1, 5)))); // as se_iset is {[1, 3), [3, 5]}.
+
+        // As se_iset is {[1, 3), [3, 5]}, it cannot equal [1,5].
+        REQUIRE_FALSE((se_iset == SeparateIntervalSet(Interval::closed(1, 5))));
 
         se_iset += Interval::closed(2, 4);
+
+        // Now, the disjoint intervals are connected and make se_iset [1,5].
         REQUIRE((se_iset == SeparateIntervalSet(Interval::closed(1, 5))));
     }
 
@@ -108,8 +112,9 @@ TEST_CASE("interval set tests", "[boost]")
 
 TEST_CASE("interval map tests", "[boost]")
 {
-    // interval maps have the "identity absorber" property. This prevents storing
-    // identities as values. For example, the following values cannot be stored:
+    // interval maps have the "identity absorber" property. This prevents
+    // storing identities as values. For example, the following values cannot
+    // be stored:
     // - int values cannot store 0.
     // - std::string values cannot store "".
     // - set<T> values cannot store {}.
@@ -138,23 +143,28 @@ TEST_CASE("interval map tests", "[boost]")
         REQUIRE((key_uppers == std::vector<int>({7, 8, 9})));
         REQUIRE((vals == std::vector<int>({1, 3, 2})));
         REQUIRE((keys == std::vector<DiscreteInterval>(
-                             {DiscreteInterval::right_open(6, 7), DiscreteInterval::closed(7, 8), DiscreteInterval::left_open(8, 9)})));
+                             {DiscreteInterval::right_open(6, 7),
+                              DiscreteInterval::closed(7, 8),
+                              DiscreteInterval::left_open(8, 9)})));
     }
 
     SECTION("enriched interval maps")
     {
         typedef boost::icl::interval_map<int, int, boost::icl::partial_enricher> EIMap;
 
-        // The third template above is a trait of the interval map. There are 4 possible traits:
+        // The third template above is a trait of the interval map.
+        // There are 4 possible traits:
         // - partial_absorber
         // - partial_enricher
         // - total absorber
         // - total enricher
-        // "partial" means that the map is defined only for keys that have been inserted.
-        // "total" means that the map is considered to have a "neutral" value for all keys not
-        // stored in the map.
-        // "absorber" means that the identity element with respect to "+" cannot be stored as a
-        // value. For example, 0 for int types and "" for std::string types.
+        // "partial" means that the map is defined only for keys that have been
+        // inserted.
+        // "total" means that the map is considered to have a "neutral" value
+        // for all keys not stored in the map.
+        // "absorber" means that the identity element with respect to "+"
+        // cannot be stored as a value. For example, 0 for int types and "" for
+        // std::string types.
         // "enricher" allows storing the identity element.
 
         auto eimap = EIMap{};
@@ -172,7 +182,10 @@ TEST_CASE("interval map tests", "[boost]")
         }
 
         REQUIRE((keys == std::vector<DiscreteInterval>(
-                             {DiscreteInterval::right_open(1, 3), DiscreteInterval::closed(3, 5), DiscreteInterval::open(5, 8), DiscreteInterval::closed(8, 10)})));
+                             {DiscreteInterval::right_open(1, 3),
+                              DiscreteInterval::closed(3, 5),
+                              DiscreteInterval::open(5, 8),
+                              DiscreteInterval::closed(8, 10)})));
         REQUIRE((vals == std::vector<int>({0, 1, 0, 3})));
     }
 }

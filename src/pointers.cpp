@@ -53,8 +53,8 @@ TEST_CASE("unique pointer destruction test", "[ptrs]")
   class PtrHolder
   {
   public:
-    PtrHolder(std::string &str1, std::string &str2) : _uPtr(new Notifier(str1)),
-                                                      _rPtr(new Notifier(str2)) {}
+    PtrHolder(std::string &str1, std::string &str2)
+        : _uPtr(new Notifier(str1)), _rPtr(new Notifier(str2)) {}
     ~PtrHolder() { delete _rPtr; }
 
   private:

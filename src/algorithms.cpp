@@ -26,7 +26,9 @@ TEST_CASE("accumulate test", "[algos]")
     SECTION("vector sum")
     {
         auto res = std::accumulate(nums.begin(), nums.end(), 0,
-                                   [](int acc, int val) { return acc + 2 * val; });
+                                   [](int acc, int val) {
+                                       return acc + 2 * val;
+                                   });
         REQUIRE(res == 42);
     }
 }
@@ -70,13 +72,15 @@ TEST_CASE("backward find_if test", "[algos]")
 {
     SECTION("successful search case")
     {
-        const auto it = std::find_if(nums.rbegin(), nums.rend(), [](int n) { return n % 2 == 0; });
+        const auto it = std::find_if(nums.rbegin(), nums.rend(),
+                                     [](int n) { return n % 2 == 0; });
         REQUIRE(it == nums.rbegin());
     }
 
     SECTION("failed search case")
     {
-        const auto it = std::find_if(nums.rbegin(), nums.rend(), [](int n) { return n % 2 < 0; });
+        const auto it = std::find_if(nums.rbegin(), nums.rend(),
+                                     [](int n) { return n % 2 < 0; });
         REQUIRE(it == nums.rend());
     }
 }
@@ -85,7 +89,8 @@ TEST_CASE("copy_if test", "[algos]")
 {
     auto numsCopy = std::vector<int>{1, 2, 3, 4, 5, 6};
     auto res = std::vector<int>{};
-    std::copy_if(numsCopy.begin(), numsCopy.end(), std::back_inserter(res), isOdd);
+    std::copy_if(numsCopy.begin(), numsCopy.end(),
+                 std::back_inserter(res), isOdd);
     REQUIRE(res == odds);
 }
 
@@ -242,7 +247,8 @@ TEST_CASE("set copy_if test", "[algos]")
 {
     auto set1 = std::set<int>{1, 2, 4, 6};
     auto res = std::set<int>(nums.begin(), nums.end());
-    std::copy_if(nums.begin(), nums.end(), std::inserter(set1, set1.begin()), isOdd);
+    std::copy_if(nums.begin(), nums.end(), std::inserter(set1, set1.begin()),
+                 isOdd);
     REQUIRE(set1 == res);
 }
 
@@ -251,7 +257,8 @@ TEST_CASE("set difference test", "[algos]")
     auto set1 = std::set<int>{3, 2, 1};
     auto set2 = std::set<int>{2, 4, 5, 3};
     auto setDiff = std::vector<int>(set1.size() + set2.size());
-    auto it = set_difference(set2.begin(), set2.end(), set1.begin(), set1.end(), setDiff.begin());
+    auto it = set_difference(set2.begin(), set2.end(),
+                             set1.begin(), set1.end(), setDiff.begin());
     setDiff.resize(it - setDiff.begin());
     auto res = std::vector<int>{4, 5};
     REQUIRE(setDiff == res);
@@ -270,7 +277,8 @@ TEST_CASE("set intersection test", "[algos]")
     auto set1 = std::set<int>{3, 2, 1};
     auto set2 = std::set<int>{2, 4, 5, 3};
     auto inter = std::vector<int>(set1.size() + set2.size());
-    auto it = set_intersection(set1.begin(), set1.end(), set2.begin(), set2.end(), inter.begin());
+    auto it = set_intersection(set1.begin(), set1.end(),
+                               set2.begin(), set2.end(), inter.begin());
     inter.resize(it - inter.begin());
     std::vector<int> res = {2, 3};
     REQUIRE(inter == res);
@@ -312,7 +320,8 @@ TEST_CASE("transform test", "[algos]")
 {
     auto twiceNums = std::vector<int>(nums.size());
     auto res = std::vector<int>{2, 4, 6, 8, 10, 12};
-    std::transform(nums.begin(), nums.end(), twiceNums.begin(), [](int a) { return a * 2; });
+    std::transform(nums.begin(), nums.end(), twiceNums.begin(),
+                   [](int a) { return a * 2; });
     REQUIRE(twiceNums == res);
 }
 
